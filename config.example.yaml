@@ -1,0 +1,32 @@
+display:
+  fullscreen: true
+  theme: "dark"
+  color_scheme: "bloomberg_orange"
+  font_size: 14
+
+multi_monitor:
+  use_all_monitors: true
+  primary_monitor_only: false
+
+data_providers:
+  yahoo_finance:
+    enabled: true
+  alpha_vantage:
+    enabled: false
+    api_key: "YOUR_API_KEY"
+  finnhub:
+    enabled: false
+    api_key: "YOUR_API_KEY"
+  fmp:
+    enabled: false
+    api_key: "YOUR_API_KEY"
+
+portfolio:
+  default_currency: "USD"
+  display_currency: "USD"
+  default_portfolio_name: "Main Portfolio"
+
+logging:
+  level: "INFO"
+  file: "logs/mafin.log"
+  console: true

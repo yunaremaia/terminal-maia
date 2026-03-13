@@ -1,0 +1,12 @@
+PyQt6>=6.6.0
+pandas>=2.0.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+plotly>=5.18.0
+aiohttp>=3.9.0
+asyncio>=3.4.3
+yfinance>=0.2.32
+sqlalchemy>=2.0.0
+pydantic>=2.5.0
+python-dotenv>=1.0.0
+loguru>=0.7.0
