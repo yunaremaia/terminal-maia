@@ -6,6 +6,12 @@ import os
 from typing import Optional, Dict, Any, List
 from datetime import datetime
 
+# Fix Windows console encoding
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
 from mafin_terminal.core import CommandParser, CommandType, ParsedCommand
 from mafin_terminal.core.ui_renderer import TerminalRenderer, Color, TableColumn, TableStyle
 from mafin_terminal.modules.market import MarketModule
@@ -77,17 +83,9 @@ class CLITerminal:
         """Print terminal banner."""
         self._clear_screen()
         print(f"{Color.CYAN}{Color.BOLD}")
-        print("╔═══════════════════════════════════════════════════════════════════╗")
-        print("║                                                                   ║")
-        print("║     ██████╗ ███████╗ █████╗ ██████╗     ██████╗ ███╗   ██╗███████╗ ║")
-        print("║     ██╔══██╗██╔════╝██╔══██╗██╔══██╗    ██╔══██╗████╗  ██║██╔════╝ ║")
-        print("║     ██████╔╝█████╗  ███████║██║  ██║    ██████╔╝██╔██╗ ██║█████╗   ║")
-        print("║     ██╔══██╗██╔══╝  ██╔══██║██║  ██║    ██╔══██╗██║╚██╗██║██╔══╝   ║")
-        print("║     ██║  ██║███████╗██║  ██║██████╔╝    ██████╔╝██║ ╚████║███████╗ ║")
-        print("║     ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝     ╚═════╝ ╚═╝  ╚═══╝╚══════╝ ║")
-        print("║                                                                   ║")
-        print("║              Professional Financial Terminal v1.0                 ║")
-        print("╚═══════════════════════════════════════════════════════════════════╝")
+        print("=" * 70)
+        print("  MAFIN TERMINAL - Professional Financial Terminal v1.0")
+        print("=" * 70)
         print(f"{Color.RESET}")
         print()
         print(f"{Color.YELLOW}Type 'help' for available commands{Color.RESET}")
