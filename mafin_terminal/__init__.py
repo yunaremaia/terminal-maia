@@ -8,5 +8,6 @@ __author__ = "MaFin Terminal Team"
 __license__ = "MIT"
 
 from mafin_terminal.gui import launch_terminal
+from mafin_terminal.cli import launch_cli
 
-__all__ = ["launch_terminal"]
+__all__ = ["launch_terminal", "launch_cli"]
