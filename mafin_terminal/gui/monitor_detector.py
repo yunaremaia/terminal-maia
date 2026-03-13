@@ -4,8 +4,10 @@ from dataclasses import dataclass
 from typing import List
 import sys
 
-from PyQt6.QtWidgets import QApplication, QDesktopWidget
+from PyQt6.QtWidgets import QApplication
 from PyQt6.QtCore import QRect
+from PyQt6.QtGui import QScreen
+from PyQt6.QtGui import QGuiApplication
 
 
 @dataclass
@@ -35,40 +37,48 @@ class MonitorDetector:
         self._app = QApplication.instance()
         if self._app is None:
             self._app = QApplication(sys.argv)
-        self._desktop = QDesktopWidget()
+        else:
+            if not isinstance(self._app, QApplication):
+                self._app = QApplication(sys.argv)
+        self._screens = self._app.screens()
+        self._primary_screen = QGuiApplication.primaryScreen()
     
     def get_monitor_count(self) -> int:
         """Return the number of connected monitors."""
-        return self._desktop.screenCount()
+        return len(self._screens)
     
     def get_primary_monitor(self) -> MonitorInfo:
         """Return information about the primary monitor."""
-        primary_index = self._desktop.primaryScreen()
-        return self._get_monitor_info(primary_index)
+        for i, screen in enumerate(self._screens):
+            if screen == self._primary_screen:
+                return self._get_monitor_info(i)
+        return self._get_monitor_info(0)
     
     def get_all_monitors(self) -> List[MonitorInfo]:
         """Return information about all connected monitors."""
         monitors = []
-        for i in range(self._desktop.screenCount()):
+        for i in range(len(self._screens)):
             monitors.append(self._get_monitor_info(i))
         return monitors
     
     def get_combined_geometry(self) -> QRect:
         """Return the combined geometry of all monitors."""
         combined = QRect()
-        for i in range(self._desktop.screenCount()):
-            geom = self._desktop.screenGeometry(i)
+        for screen in self._screens:
+            geom = screen.geometry()
             combined = combined.united(geom)
         return combined
     
     def _get_monitor_info(self, index: int) -> MonitorInfo:
         """Get detailed information about a specific monitor."""
-        geometry = self._desktop.screenGeometry(index)
-        available_geometry = self._desktop.availableGeometry(index)
+        screen = self._screens[index]
+        geometry = screen.geometry()
+        available_geometry = screen.availableGeometry()
         
-        name = self._desktop.screen(index).name() if hasattr(self._desktop.screen(index), 'name') else f"Monitor {index + 1}"
+        name = screen.name() if hasattr(screen, 'name') else f"Monitor {index + 1}"
         
-        is_primary = index == self._desktop.primaryScreen()
+        primary_screen = QGuiApplication.primaryScreen()
+        is_primary = screen == primary_screen
         
         return MonitorInfo(
             index=index,
@@ -80,7 +90,7 @@ class MonitorDetector:
             is_primary=is_primary
         )
     
-    def print_monitor_info(self) -> None:
+    def print_monitor_info(self) -> List[MonitorInfo]:
         """Print information about all detected monitors."""
         monitors = self.get_all_monitors()
         print("=" * 60)
